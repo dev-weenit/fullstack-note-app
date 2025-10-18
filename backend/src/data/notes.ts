@@ -36,4 +36,20 @@ function deleteNote(id: string) {
   notes = notes.filter((note) => note.id !== id);
 }
 
-export { addNote, deleteNote, generateNewId, getAllNotes };
+function patchNote(id: string, updatedNote: Partial<Note>) {
+  notes = notes.map((note) =>
+    note.id === id
+      ? {
+          title: updatedNote.title ?? note.title,
+          content: updatedNote.content ?? note.content,
+          id: note.id,
+        }
+      : note
+  );
+}
+
+function hasNote(id: string): boolean {
+  return notes.some((note) => note.id === id);
+}
+
+export { addNote, deleteNote, generateNewId, getAllNotes, hasNote, patchNote };

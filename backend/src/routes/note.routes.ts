@@ -1,5 +1,12 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { addNote, deleteNote, generateNewId, getAllNotes } from "../data/notes";
+import {
+  addNote,
+  deleteNote,
+  generateNewId,
+  getAllNotes,
+  hasNote,
+  patchNote,
+} from "../data/notes";
 import { NotesPayload } from "../types/notes_payload.types";
 
 const router = Router();
@@ -21,7 +28,7 @@ router.post(
   ) => {
     const { title, content } = req.body;
 
-    if (!title || !content) {
+    if (!title?.trim() || !content?.trim()) {
       return res.status(400).json({ error: "Missing title or content" });
     }
 
@@ -50,7 +57,40 @@ router.delete(
     const { id } = req.params;
     try {
       if (typeof id === "string" && id) {
+        if (!hasNote(id)) {
+          return res.status(404).json({ error: "Note not found" });
+        }
         deleteNote(id);
+        return res.sendStatus(204);
+      } else {
+        return res.status(400).json({ error: "Invalid id" });
+      }
+    } catch (error) {
+      return next(error);
+    }
+  }
+);
+
+router.patch(
+  "/:id",
+  (
+    req: Request<{ id: string }, Record<string, never>, Partial<NotesPayload>>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { id } = req.params;
+    try {
+      if (typeof id === "string" && id) {
+        if (!hasNote(id)) {
+          return res.status(404).json({ error: "Note not found" });
+        }
+        const { title, content } = req.body;
+        if (!title?.trim() && !content?.trim()) {
+          return res.status(400).json({ error: "Nothing to update" });
+        }
+
+        patchNote(id, { title, content });
+
         return res.sendStatus(204);
       } else {
         return res.status(400).json({ error: "Invalid id" });

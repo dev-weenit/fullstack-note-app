@@ -1,0 +1,50 @@
+PATCH http://localhost:3000/api/notes/1
+Content-Type: application/json
+
+{
+    "title": "Updated title",
+    "content": "Updated content"
+}
+
+###
+PATCH http://localhost:3000/api/notes/2
+Content-Type: application/json
+
+{
+    "title": "Updated title",
+    "content": "Updated content"
+}
+
+###
+
+PATCH http://localhost:3000/api/notes/1
+Content-Type: application/json
+
+{
+    "title": "Updated title only"
+}
+
+### 
+PATCH  http://localhost:3000/api/notes/1
+Content-Type: application/json
+
+{
+    "content": "Updated content only"
+}
+
+### 
+PATCH  http://localhost:3000/api/notes/1
+Content-Type: application/json
+
+{
+    "content": ""
+}
+
+
+### 
+PATCH  http://localhost:3000/api/notes/1
+Content-Type: application/json
+
+{
+    "content": "   "
+}
