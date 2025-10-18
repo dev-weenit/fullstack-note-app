@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { addNote, generateNewId, getAllNotes } from "../data/notes";
+import { addNote, deleteNote, generateNewId, getAllNotes } from "../data/notes";
 import { NotesPayload } from "../types/notes_payload.types";
 
 const router = Router();
@@ -37,6 +37,27 @@ router.post(
     }
 
     return res.status(201).json({ id });
+  }
+);
+
+router.delete(
+  "/:id",
+  (
+    req: Request<{ id: string }, Record<string, never>, Record<string, never>>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { id } = req.params;
+    try {
+      if (typeof id === "string" && id) {
+        deleteNote(id);
+        return res.sendStatus(204);
+      } else {
+        return res.status(400).json({ error: "Invalid id" });
+      }
+    } catch (error) {
+      return next(error);
+    }
   }
 );
 

@@ -1,6 +1,6 @@
 import { Note } from "../types/notes.types";
 
-const notes: Note[] = [
+let notes: Note[] = [
   {
     id: "1",
     title: "This is a note",
@@ -32,4 +32,8 @@ function generateNewId(): string {
   return String(maxId + 1);
 }
 
-export { addNote, generateNewId, getAllNotes };
+function deleteNote(id: string) {
+  notes = notes.filter((note) => note.id !== id);
+}
+
+export { addNote, deleteNote, generateNewId, getAllNotes };
